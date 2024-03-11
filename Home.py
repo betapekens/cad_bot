@@ -5,10 +5,11 @@ from src.prompt import pre_prompt
 import numpy as np
 from stl import mesh  # pip install numpy-stl
 import plotly.graph_objects as go
+import subprocess
 
 
-ANYSCALE_ENDPOINT_TOKEN = "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"
-ANYSCALE_ENDPOINT_TOKEN = st.sidebar.text_input("API KEY", "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")
+ANYSCALE_ENDPOINT_TOKEN = st.sidebar.text_input("API KEY", "",type="password")
+
 
 if 'message_history' not in st.session_state:
     st.session_state['message_history'] = []
@@ -34,7 +35,9 @@ class OpenAIChatAgent:
         self.message_history = []
         self.model = model 
         self.oai_client = openai.OpenAI(
-           api_key=ANYSCALE_ENDPOINT_TOKEN
+           api_key=ANYSCALE_ENDPOINT_TOKEN,
+           #base_url = "https://api.endpoints.anyscale.com/v1",
+
         )
     def greet(self):
         return None
@@ -59,7 +62,8 @@ class OpenAIChatAgent:
            
            model = self.model,
            messages = st.session_state['message_history'],
-           stream = True
+           stream = True,
+           temperature =  0.01
         )
         words = ''
         for tok in response: 
@@ -84,6 +88,7 @@ for message in st.session_state.messages:
 
 
 agent = OpenAIChatAgent("gpt-3.5-turbo")
+#agent = OpenAIChatAgent(model = "mistralai/Mixtral-8x7B-Instruct-v0.1")
 if ANYSCALE_ENDPOINT_TOKEN is not None:
     
     if prompt := st.chat_input("What is up?"):
@@ -93,27 +98,37 @@ if ANYSCALE_ENDPOINT_TOKEN is not None:
         with st.chat_message("user"):
             st.markdown(prompt)
         st.session_state.messages.append({"role": "user", "content": prompt})
-        prompt = "Write everything inside a codeblock. Store the final object in the variable 'obj'. " + prompt
+        prompt = "Do not import any libraries, write everything in a codeblock: " + prompt
         with st.chat_message("assistant"):
-            #message_placeholder = st.empty()
+            message_placeholder = st.empty()
             full_response = ""
         for word in agent.process_input(prompt):
             full_response += word
-            #message_placeholder.write(full_response + "▌")
-        #message_placeholder.write(full_response)
+            message_placeholder.write(full_response + "▌")
+        message_placeholder.write(full_response)
         st.session_state['message_history'].append({
                     'role': 'assistant',
                     'content': full_response
                 })
-        #st.session_state.messages.append({"role": "assistant", "content": full_response})
+        st.session_state.messages.append({"role": "assistant", "content": full_response})
         print(st.session_state['message_history'])
         script_name = "llm_query.py"
         with open(script_name, "w") as f:
-
+            sub1 = "```python"
+            sub2 = "```"
+            
+            test_str=full_response.replace(sub1,"*")
+            print(test_str)
+            test_str=test_str.replace(sub2,"*")
+            re=test_str.split("*")
+            code=re[1]
             f.write(
-                f'{full_response[9:-3]}\ncq.exporters.export(obj, "stl_files/obj.stl")'
+                f'\nimport cadquery as cq\n{code}\ncq.exporters.export(obj, "stl_files/obj.stl")'
             )
+            
+        #import llm_query
         import llm_query
+
 
         my_mesh = mesh.Mesh.from_file('stl_files/obj.stl')
         vertices, I, J, K = stl2mesh3d(my_mesh)
@@ -133,7 +148,7 @@ if ANYSCALE_ENDPOINT_TOKEN is not None:
                     showscale=False)
         layout = go.Layout(
                     width=800,
-                    height=800,
+                    height=400,
                     scene_camera=dict(eye=dict(x=1.25, y=-1.25, z=1)),
                     scene_xaxis_visible=False,
                     scene_yaxis_visible=False,
@@ -150,10 +165,12 @@ if ANYSCALE_ENDPOINT_TOKEN is not None:
                                         specular= 1,
                                         roughness= .1,
                                         facenormalsepsilon=0))
+        
         fig.data[0].update(lightposition=dict(x=3000,
                                             y=3000,
                                             z=10000))
-        st.session_state.messages.append({"role": "assistant", "content": st.plotly_chart(fig, )})
+        
+        st.session_state.messages.append({"role": "assistant", "content": st.plotly_chart(fig)})
 
 else:
     st.sidebar.warning("INPUT API KEY!")
