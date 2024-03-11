@@ -1,15 +1,12 @@
 import sys
-import os
 import openai
 import streamlit as st
 from src.prompt import pre_prompt
 import numpy as np
 from stl import mesh  # pip install numpy-stl
 import plotly.graph_objects as go
+import subprocess
 
-if st.session_state['cadquery'] is None:
-    os.system("pip3 install cadquery==2.3.1")
-    st.session_state['cadquery'] = 1
 
 
 ANYSCALE_ENDPOINT_TOKEN = st.sidebar.text_input("API KEY", "",type="password")
@@ -129,8 +126,7 @@ if ANYSCALE_ENDPOINT_TOKEN is not None:
             )
             
         #import llm_query
-
-        os.system("python3 llm_query.py")
+        subprocess.run([f"{sys.executable}", "script.py"])
 
 
         my_mesh = mesh.Mesh.from_file('stl_files/obj.stl')
