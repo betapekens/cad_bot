@@ -1,4 +1,5 @@
 import sys
+import os
 import openai
 import streamlit as st
 from src.prompt import pre_prompt
@@ -89,28 +90,25 @@ for message in st.session_state.messages:
 agent = OpenAIChatAgent("gpt-3.5-turbo")
 #agent = OpenAIChatAgent(model = "mistralai/Mixtral-8x7B-Instruct-v0.1")
 if ANYSCALE_ENDPOINT_TOKEN is not None:
-    
     if prompt := st.chat_input("What is up?"):
-        # if len(st.session_state.messages) == 0:
-        # else:
-        
         with st.chat_message("user"):
             st.markdown(prompt)
         st.session_state.messages.append({"role": "user", "content": prompt})
         prompt = "Do not import any libraries, write everything in a codeblock: " + prompt
+        
         with st.chat_message("assistant"):
             message_placeholder = st.empty()
             full_response = ""
         for word in agent.process_input(prompt):
             full_response += word
-            message_placeholder.write(full_response + "▌")
-        message_placeholder.write(full_response)
-        st.session_state['message_history'].append({
-                    'role': 'assistant',
-                    'content': full_response
-                })
-        st.session_state.messages.append({"role": "assistant", "content": full_response})
-        print(st.session_state['message_history'])
+            #message_placeholder.write(full_response + "▌")
+        #message_placeholder.write(full_response)
+        # st.session_state['message_history'].append({
+        #             'role': 'assistant',
+        #             'content': full_response
+        #         })
+        #st.session_state.messages.append({"role": "assistant", "content": full_response})
+        
         script_name = "llm_query.py"
         with open(script_name, "w") as f:
             sub1 = "```python"
@@ -126,7 +124,7 @@ if ANYSCALE_ENDPOINT_TOKEN is not None:
             )
             
         #import llm_query
-        import llm_query
+        os.system("python llm_query.py")
 
 
         my_mesh = mesh.Mesh.from_file('stl_files/obj.stl')
