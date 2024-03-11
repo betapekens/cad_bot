@@ -124,7 +124,7 @@ if ANYSCALE_ENDPOINT_TOKEN is not None:
             )
             
         #import llm_query
-        os.system("python llm_query.py")
+        os.system("python3 llm_query.py")
 
 
         my_mesh = mesh.Mesh.from_file('stl_files/obj.stl')
