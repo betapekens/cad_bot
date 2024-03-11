@@ -124,6 +124,8 @@ if ANYSCALE_ENDPOINT_TOKEN is not None:
             )
             
         #import llm_query
+        os.system("pip3 install cadquery==2.3.1")
+
         os.system("python3 llm_query.py")
 
 
