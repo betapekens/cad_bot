@@ -126,7 +126,7 @@ if ANYSCALE_ENDPOINT_TOKEN is not None:
             )
             
         #import llm_query
-        subprocess.run([f"{sys.executable}", "script.py"])
+        subprocess.run([f"{sys.executable}", "llm_query.py"])
 
 
         my_mesh = mesh.Mesh.from_file('stl_files/obj.stl')
