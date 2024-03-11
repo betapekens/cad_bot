@@ -7,10 +7,14 @@ import numpy as np
 from stl import mesh  # pip install numpy-stl
 import plotly.graph_objects as go
 
+if st.session_state['cadquery'] is None:
+    os.system("pip3 install cadquery==2.3.1")
+    st.session_state['cadquery'] = 1
+
 
 ANYSCALE_ENDPOINT_TOKEN = st.sidebar.text_input("API KEY", "",type="password")
 
-os.system("pip3 install cadquery==2.3.1")
+
 
 if 'message_history' not in st.session_state:
     st.session_state['message_history'] = []
