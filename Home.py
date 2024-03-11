@@ -11,7 +11,7 @@ import subprocess
 
 ANYSCALE_ENDPOINT_TOKEN = st.sidebar.text_input("API KEY", "",type="password")
 
-
+st.title("CADQUERY")
 
 if 'message_history' not in st.session_state:
     st.session_state['message_history'] = []
