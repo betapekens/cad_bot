@@ -8,6 +8,9 @@ import plotly.graph_objects as go
 import subprocess
 import re as regex
 import os
+import time
+
+
 ANYSCALE_ENDPOINT_TOKEN = st.secrets["ANYSCALE_ENDPOINT_TOKEN"]
 #ANYSCALE_ENDPOINT_TOKEN = st.sidebar.text_input("API KEY", "",type="password")
 
@@ -51,6 +54,7 @@ if ANYSCALE_ENDPOINT_TOKEN is not None:
         
         message_placeholder = st.empty()
         st.session_state['message_history'].append({"role": "user", "content": prompt})
+        start = time.time()
         full_response = client.messages.create(
             #model="claude-3-haiku-20240307",
             model="claude-3-sonnet-20240229",
@@ -136,9 +140,11 @@ if ANYSCALE_ENDPOINT_TOKEN is not None:
         
         message_assistant = st.chat_message("assistant")
         message_assistant.plotly_chart(fig, use_container_width=True)
-        
+        end = time.time()
+
         stl_file_path = "stl_files/obj.stl"
         # Check if the file exists
+        st.write(f"Generated in **{round(end-start, 2)}** seconds")
         if os.path.exists(stl_file_path):
             with open(stl_file_path, "rb") as file:
                 btn = st.download_button(
@@ -147,6 +153,7 @@ if ANYSCALE_ENDPOINT_TOKEN is not None:
                     file_name="obj.stl",
                     mime="application/octet-stream"
             )
+        
 
 
 else:
