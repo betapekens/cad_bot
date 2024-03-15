@@ -6,7 +6,7 @@ import numpy as np
 from stl import mesh  # pip install numpy-stl
 import plotly.graph_objects as go
 import subprocess
-ANYSCALE_ENDPOINT_TOKEN = st.secrets["ANYSCALE_ENDPOINT_TOKEN "]
+ANYSCALE_ENDPOINT_TOKEN = st.secrets["ANYSCALE_ENDPOINT_TOKEN"]
 #ANYSCALE_ENDPOINT_TOKEN = st.sidebar.text_input("API KEY", "",type="password")
 
 st.image("notebooks/cadscribe.png", width=75)
