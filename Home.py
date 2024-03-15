@@ -90,7 +90,7 @@ for message in st.session_state.messages:
 agent = OpenAIChatAgent("gpt-3.5-turbo")
 #agent = OpenAIChatAgent(model = "mistralai/Mixtral-8x7B-Instruct-v0.1")
 if ANYSCALE_ENDPOINT_TOKEN is not None:
-    if prompt := st.chat_input("What is up?"):
+    if prompt := st.chat_input("Try to create a 20x10 inch faceplate!"):
         with st.chat_message("user"):
             st.markdown(prompt)
         st.session_state.messages.append({"role": "user", "content": prompt})
