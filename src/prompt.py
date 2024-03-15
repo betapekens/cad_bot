@@ -38,22 +38,5 @@ cq.Workplane.polarArray(radius, startAngle, ...)- Creates a polar array of point
 cq.Workplane.slot2D(length, diameter[, angle])- Creates a rounded slot for each point on the stack.
 cq.Workplane.offset2D(d[, kind, forConstruction])- Creates a 2D offset wire.
 cq.Workplane.placeSketch(*sketches)- Place the provided sketch(es) based on the current items on the stack.
-cq.Workplane.gear(gear: BevelGear|CrossedHelicalGear|RackGear|RingGear|Worm)- Create a gear from the provided gear class.
-
-Here are also some gear classes from the library, use this as input to cq.Workplane.gear
-
-import cq_gears
-
-cq_gears.BevelGear(module, teeth_number, cone_angle, face_width, pressure_angle=20.0, helix_angle=0.0, clearance=0.0, backlash=0.0, bore_d)
-cq_gears.CrossedHelicalGear(module, teeth_number, width, pressure_angle=20.0, helix_angle=0.0, clearance=0.0, backlash=0.0, bore_d)
-cq_gears.RackGear(module, length, width, height, pressure_angle=20.0, helix_angle=0.0, clearance=0.0, backlash=0.0, bore_d)
-cq_gears.RingGear(module, teeth_number, width, rim_width, pressure_angle=20.0, helix_angle=0.0, clearance=0.0, backlash=0.0, bore_d)
-cq_gears.Worm(module, lead_angle, n_threads, length, pressure_angle=20.0, clearance=0.0, backlash=0.0, bore_d)
-cq_gears.SpurGear(self, module, teeth_number, width, pressure_angle=20.0, helix_angle=0.0, clearance=0.0, backlash=0.0, bore_d)
-
-Here is a way to generate airfoils with the coordinates being fed into cq.Workplane.polyline followed by a cq.Workplane.polyline.close
-For NACA airfoils use get_coords() for the following classes
-You MUST: import parafoil
-parafoil.CamberThicknessAirfoil(inlet_angle, outlet_angle, chord_length, angle_units="rad"|"deg")
-parafoil.NACAAirfoil(naca_string, chord_length)
+obj = obj.faces(">Z").workplane().circle(diameter).cutThruAll() - tot make a hoole in the middle
 """
