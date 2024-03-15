@@ -2,7 +2,7 @@ streamlit
 cadquery==2.3.1
 git+https://github.com/meadiode/cq_gears.git@main
 git+https://github.com/OpenOrion/parafoil.git#egg=parafoil
-openai
+anthropic
 plotly
 numpy
 numpy-stl

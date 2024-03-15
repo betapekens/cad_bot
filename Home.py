@@ -1,13 +1,17 @@
 import sys
-import openai
+import anthropic
 import streamlit as st
 from src.prompt import pre_prompt
 import numpy as np
 from stl import mesh  # pip install numpy-stl
 import plotly.graph_objects as go
 import subprocess
+import re as regex
+import os
 ANYSCALE_ENDPOINT_TOKEN = st.secrets["ANYSCALE_ENDPOINT_TOKEN"]
 #ANYSCALE_ENDPOINT_TOKEN = st.sidebar.text_input("API KEY", "",type="password")
+
+
 
 st.image("notebooks/cadscribe.png", width=75)
 
@@ -25,56 +29,6 @@ def stl2mesh3d(stl_mesh):
     J = np.take(ixr, [3*k+1 for k in range(p)])
     K = np.take(ixr, [3*k+2 for k in range(p)])
     return vertices, I, J, K
-
-
-class OpenAIChatAgent:
-    def __init__(self, model: str):
-    #In this simple example, we do not modify the past conversation.
-    #Eventually you will run out of context window, but this should be enough for a 30-step conversation
-    #You need to either trim the message history or summarize it for longer conversations
-        self.message_history = []
-        self.model = model 
-        self.oai_client = openai.OpenAI(
-           api_key=ANYSCALE_ENDPOINT_TOKEN,
-           #base_url = "https://api.endpoints.anyscale.com/v1",
-
-        )
-    def greet(self):
-        return None
-
-    def process_input(self, input: str):
-        if len(st.session_state['message_history']) == 0:
-            st.session_state['message_history'].append(
-                {
-                    'role': 'user',
-                    'content': pre_prompt
-                }
-            )
-
-        body = {
-                    'role': 'user',
-                    'content': input
-                }
-        
-        st.session_state['message_history'].append(body)
-        
-        response = self.oai_client.chat.completions.create(
-           
-           model = self.model,
-           messages = st.session_state['message_history'],
-           stream = True,
-           temperature =  0.01
-        )
-        words = ''
-        for tok in response: 
-            delta = tok.choices[0].delta
-            if not delta: # End token 
-                break
-            elif delta.content:
-                words += delta.content
-                yield delta.content 
-            else: 
-                continue
         
 
 
@@ -87,26 +41,32 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
 
 
-agent = OpenAIChatAgent("gpt-3.5-turbo")
-#agent = OpenAIChatAgent(model = "mistralai/Mixtral-8x7B-Instruct-v0.1")
+client = anthropic.Client(api_key=ANYSCALE_ENDPOINT_TOKEN)
 if ANYSCALE_ENDPOINT_TOKEN is not None:
     if prompt := st.chat_input("Try to create a 20x10 inch faceplate!"):
         with st.chat_message("user"):
             st.markdown(prompt)
         st.session_state.messages.append({"role": "user", "content": prompt})
-        prompt = "Do not import any libraries, write everything in a codeblock: " + prompt
+        prompt = prompt #+ "Never import libraries, write everything from start in a codeblock"
         
-        with st.chat_message("assistant"):
-            message_placeholder = st.empty()
-            full_response = ""
-        for word in agent.process_input(prompt):
-            full_response += word
-            #message_placeholder.write(full_response + "▌")
+        message_placeholder = st.empty()
+        st.session_state['message_history'].append({"role": "user", "content": prompt})
+        full_response = client.messages.create(
+            #model="claude-3-haiku-20240307",
+            model="claude-3-sonnet-20240229",
+            #model="claude-3-opus-20240229",
+            system=pre_prompt, # <-- system prompt
+            messages=st.session_state['message_history'],
+            max_tokens = 1000
+        ).content[0].text
+
+
+            #message_placeholder.write(full_response)
         #message_placeholder.write(full_response)
-        # st.session_state['message_history'].append({
-        #             'role': 'assistant',
-        #             'content': full_response
-        #         })
+        st.session_state['message_history'].append({
+                    'role': 'assistant',
+                    'content': full_response
+                })
         #st.session_state.messages.append({"role": "assistant", "content": full_response})
         
         script_name = "llm_query.py"
@@ -119,8 +79,15 @@ if ANYSCALE_ENDPOINT_TOKEN is not None:
             test_str=test_str.replace(sub2,"*")
             re=test_str.split("*")
             code=re[1]
+            # Define a regex pattern to match import statements
+            pattern = r'\bimport\s+\w+\s*(?:as\s+\w+)?\b'
+
+            # Use re.sub() to replace all matches with an empty string
+            code = regex.sub(pattern, '', code)
             f.write(
-                f'\nimport cadquery as cq\nimport cq_gears\n{code}\ncq.exporters.export(obj, "stl_files/obj.stl")'
+                f'\nimport cadquery as cq\nimport cq_gears\n{code}\
+                    \ncq.exporters.export(obj, "stl_files/obj.stl")\
+                    \ncq.exporters.export(obj, "stl_files/obj.step")'
             )
             
         #import llm_query
@@ -167,7 +134,20 @@ if ANYSCALE_ENDPOINT_TOKEN is not None:
                                             y=3000,
                                             z=10000))
         
-        st.session_state.messages.append({"role": "assistant", "content": st.plotly_chart(fig)})
+        message_assistant = st.chat_message("assistant")
+        message_assistant.plotly_chart(fig, use_container_width=True)
+        
+        stl_file_path = "stl_files/obj.stl"
+        # Check if the file exists
+        if os.path.exists(stl_file_path):
+            with open(stl_file_path, "rb") as file:
+                btn = st.download_button(
+                    label="Download STL",
+                    data=file,
+                    file_name="obj.stl",
+                    mime="application/octet-stream"
+            )
+
 
 else:
     st.sidebar.warning("INPUT API KEY!")

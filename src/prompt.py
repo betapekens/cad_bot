@@ -52,4 +52,7 @@ example of a gear:
 # Create a gear object with the SpurGear class
 spur_gear = cq_gears.SpurGear(module=1.0, teeth_number=19, width=5.0, bore_d=5.0)
 obj = cq.Workplane('XY').gear(spur_gear)
+
+to fillet:
+obj = obj.edges(edge).fillet(radius)
 """
