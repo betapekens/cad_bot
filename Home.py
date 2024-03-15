@@ -120,7 +120,7 @@ if ANYSCALE_ENDPOINT_TOKEN is not None:
             re=test_str.split("*")
             code=re[1]
             f.write(
-                f'\nimport cadquery as cq\n{code}\ncq.exporters.export(obj, "stl_files/obj.stl")'
+                f'\nimport cadquery as cq\nimport cq_gears\n{code}\ncq.exporters.export(obj, "stl_files/obj.stl")'
             )
             
         #import llm_query

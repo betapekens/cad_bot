@@ -39,4 +39,17 @@ cq.Workplane.slot2D(length, diameter[, angle])- Creates a rounded slot for each 
 cq.Workplane.offset2D(d[, kind, forConstruction])- Creates a 2D offset wire.
 cq.Workplane.placeSketch(*sketches)- Place the provided sketch(es) based on the current items on the stack.
 obj = obj.faces(">Z").workplane().circle(diameter).cutThruAll() - tot make a hoole in the middle
+
+Here are also some gear classes from the library, use this as input to cq.Workplane.gear:
+cq_gears.BevelGear(module, teeth_number, cone_angle, face_width, pressure_angle=20.0, helix_angle=0.0, clearance=0.0, backlash=0.0, bore_d)
+cq_gears.CrossedHelicalGear(module, teeth_number, width, pressure_angle=20.0, helix_angle=0.0, clearance=0.0, backlash=0.0, bore_d)
+cq_gears.RackGear(module, length, width, height, pressure_angle=20.0, helix_angle=0.0, clearance=0.0, backlash=0.0, bore_d)
+cq_gears.RingGear(module, teeth_number, width, rim_width, pressure_angle=20.0, helix_angle=0.0, clearance=0.0, backlash=0.0, bore_d)
+cq_gears.Worm(module, lead_angle, n_threads, length, pressure_angle=20.0, clearance=0.0, backlash=0.0, bore_d)
+cq_gears.SpurGear(self, module, teeth_number, width, pressure_angle=20.0, helix_angle=0.0, clearance=0.0, backlash=0.0, bore_d)
+
+example of a gear:
+# Create a gear object with the SpurGear class
+spur_gear = cq_gears.SpurGear(module=1.0, teeth_number=19, width=5.0, bore_d=5.0)
+obj = cq.Workplane('XY').gear(spur_gear)
 """
