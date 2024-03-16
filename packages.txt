@@ -2,3 +2,7 @@ libgl1-mesa-glx
 libxrender1
 libglu1-mesa
 libxcursor1
+libxft2 libxft2:i386 lib32ncurses5
+libxext6
+libxext6:i386
+lib32ncurses6
