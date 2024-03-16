@@ -57,7 +57,7 @@ for message in st.session_state.messages:
 client = anthropic.Client(api_key=ANYSCALE_ENDPOINT_TOKEN)
 if ANYSCALE_ENDPOINT_TOKEN is not None:
     if prompt := st.chat_input("For example try to create a helical gear or an airfoil specifying the NACA number"):
-        with st.chat_message("user", avatar="🧑‍💻"):
+        with st.chat_message("user", avatar="🧑"):
             st.markdown(prompt)
         st.session_state.messages.append({"role": "user", "content": prompt})
         prompt = prompt #+ "Never import libraries, write everything from start in a codeblock"
