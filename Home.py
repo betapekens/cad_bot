@@ -10,7 +10,13 @@ import re as regex
 import os
 import time
 
-
+hide_streamlit_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
 ANYSCALE_ENDPOINT_TOKEN = st.secrets["ANYSCALE_ENDPOINT_TOKEN"]
 #ANYSCALE_ENDPOINT_TOKEN = st.sidebar.text_input("API KEY", "",type="password")
 
