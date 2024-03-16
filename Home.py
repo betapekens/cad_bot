@@ -47,7 +47,7 @@ if "messages" not in st.session_state:
 
 for message in st.session_state.messages:
     if message["role"]=="user":
-        avatar = "🧑‍💻"
+        avatar = "🧑"
     else:
         avatar = "🤖"
     with st.chat_message(message["role"], avatar=avatar):
@@ -59,97 +59,97 @@ if ANYSCALE_ENDPOINT_TOKEN is not None:
     if prompt := st.chat_input("For example try to create a helical gear or an airfoil specifying the NACA number"):
         with st.chat_message("user", avatar="🧑"):
             st.markdown(prompt)
-        st.session_state.messages.append({"role": "user", "content": prompt})
-        prompt = prompt #+ "Never import libraries, write everything from start in a codeblock"
-        
-        message_placeholder = st.empty()
-        st.session_state['message_history'].append({"role": "user", "content": prompt})
-        start = time.time()
-        full_response = client.messages.create(
-            #model="claude-3-haiku-20240307",
-            model="claude-3-sonnet-20240229",
-            #model="claude-3-opus-20240229",
-            system=pre_prompt, # <-- system prompt
-            messages=st.session_state['message_history'],
-            max_tokens = 1000
-        ).content[0].text
+        with st.chat_message("assistant", avatar="🤖"):
+            with st.spinner():
+                st.session_state.messages.append({"role": "user", "content": prompt})
+                prompt = prompt #+ "Never import libraries, write everything from start in a codeblock"
+                
+                message_placeholder = st.empty()
+                st.session_state['message_history'].append({"role": "user", "content": prompt})
+                start = time.time()
+                full_response = client.messages.create(
+                    #model="claude-3-haiku-20240307",
+                    model="claude-3-sonnet-20240229",
+                    #model="claude-3-opus-20240229",
+                    system=pre_prompt, # <-- system prompt
+                    messages=st.session_state['message_history'],
+                    max_tokens = 1000
+                ).content[0].text
 
 
-            #message_placeholder.write(full_response)
-        #message_placeholder.write(full_response)
-        st.session_state['message_history'].append({
-                    'role': 'assistant',
-                    'content': full_response
-                })
-        #st.session_state.messages.append({"role": "assistant", "content": full_response})
-        
-        script_name = "llm_query.py"
-        with open(script_name, "w") as f:
-            sub1 = "```python"
-            sub2 = "```"
-            
-            test_str=full_response.replace(sub1,"*")
-            print(test_str)
-            test_str=test_str.replace(sub2,"*")
-            re=test_str.split("*")
-            code=re[1]
-            # Define a regex pattern to match import statements
-            pattern = r'\bimport\s+\w+\s*(?:as\s+\w+)?\b'
+                    #message_placeholder.write(full_response)
+                #message_placeholder.write(full_response)
+                st.session_state['message_history'].append({
+                            'role': 'assistant',
+                            'content': full_response
+                        })
+                #st.session_state.messages.append({"role": "assistant", "content": full_response})
+                
+                script_name = "llm_query.py"
+                with open(script_name, "w") as f:
+                    sub1 = "```python"
+                    sub2 = "```"
+                    
+                    test_str=full_response.replace(sub1,"*")
+                    print(test_str)
+                    test_str=test_str.replace(sub2,"*")
+                    re=test_str.split("*")
+                    code=re[1]
+                    # Define a regex pattern to match import statements
+                    pattern = r'\bimport\s+\w+\s*(?:as\s+\w+)?\b'
 
-            # Use re.sub() to replace all matches with an empty string
-            code = regex.sub(pattern, '', code)
-            f.write(
-                f'\nimport cadquery as cq\nimport cq_gears\nimport parafoil\n{code}\
-                    \ncq.exporters.export(obj, "stl_files/obj.stl")\
-                    \ncq.exporters.export(obj, "stl_files/obj.step")'
-            )
-            
-        #import llm_query
-        subprocess.run([f"{sys.executable}", "llm_query.py"])
+                    # Use re.sub() to replace all matches with an empty string
+                    code = regex.sub(pattern, '', code)
+                    f.write(
+                        f'\nimport cadquery as cq\nimport cq_gears\nimport parafoil\n{code}\
+                            \ncq.exporters.export(obj, "stl_files/obj.stl")\
+                            \ncq.exporters.export(obj, "stl_files/obj.step")'
+                    )
+                    
+                #import llm_query
+                subprocess.run([f"{sys.executable}", "llm_query.py"])
 
 
-        my_mesh = mesh.Mesh.from_file('stl_files/obj.stl')
-        vertices, I, J, K = stl2mesh3d(my_mesh)
-        x, y, z = vertices.T
-        colorscale= [[0, '#e5dee5'], [1, '#e5dee5']]                           
-        mesh3D = go.Mesh3d(
-                    x=x+10,
-                    y=y,
-                    z=z, 
-                    i=I, 
-                    j=J, 
-                    k=K, 
-                    flatshading=True,
-                    colorscale=colorscale, 
-                    intensity=z, 
-                    name='AT&T',
-                    showscale=False)
-        layout = go.Layout(
-                    width=800,
-                    height=400,
-                    scene_camera=dict(eye=dict(x=1.25, y=-1.25, z=1)),
-                    scene_xaxis_visible=False,
-                    scene_yaxis_visible=False,
-                    scene_zaxis_visible=False,
-                    scene=dict(
-                        aspectmode='data'
-                ))
-        fig = go.Figure(data=[mesh3D],
-                        layout=layout
-                        )
-        fig.data[0].update(lighting=dict(ambient= 0.18,
-                                        diffuse= 1,
-                                        fresnel=  .1,
-                                        specular= 1,
-                                        roughness= .1,
-                                        facenormalsepsilon=0))
-        
-        fig.data[0].update(lightposition=dict(x=3000,
-                                            y=3000,
-                                            z=10000))
-        
-        message_assistant = st.chat_message("assistant", avatar="🤖")
-        message_assistant.plotly_chart(fig, use_container_width=True)
+                my_mesh = mesh.Mesh.from_file('stl_files/obj.stl')
+                vertices, I, J, K = stl2mesh3d(my_mesh)
+                x, y, z = vertices.T
+                colorscale= [[0, '#e5dee5'], [1, '#e5dee5']]                           
+                mesh3D = go.Mesh3d(
+                            x=x+10,
+                            y=y,
+                            z=z, 
+                            i=I, 
+                            j=J, 
+                            k=K, 
+                            flatshading=True,
+                            colorscale=colorscale, 
+                            intensity=z, 
+                            name='AT&T',
+                            showscale=False)
+                layout = go.Layout(
+                            width=800,
+                            height=400,
+                            scene_camera=dict(eye=dict(x=1.25, y=-1.25, z=1)),
+                            scene_xaxis_visible=False,
+                            scene_yaxis_visible=False,
+                            scene_zaxis_visible=False,
+                            scene=dict(
+                                aspectmode='data'
+                        ))
+                fig = go.Figure(data=[mesh3D],
+                                layout=layout
+                                )
+                fig.data[0].update(lighting=dict(ambient= 0.18,
+                                                diffuse= 1,
+                                                fresnel=  .1,
+                                                specular= 1,
+                                                roughness= .1,
+                                                facenormalsepsilon=0))
+                
+                fig.data[0].update(lightposition=dict(x=3000,
+                                                    y=3000,
+                                                    z=10000))
+                st.plotly_chart(fig, use_container_width=True)
         end = time.time()
 
         stl_file_path = "stl_files/obj.stl"
