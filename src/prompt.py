@@ -13,8 +13,6 @@ cq.Workplane.vLine(distance[, forConstruction])- Make a vertical line from the c
 cq.Workplane.vLineTo(yCoord[, forConstruction])- Make a vertical line from the current point to the provided y coordinate.
 cq.Workplane.hLine(distance[, forConstruction])- Make a horizontal line from the current point the provided distance
 cq.Workplane.hLineTo(xCoord[, forConstruction])- Make a horizontal line from the current point to the provided x coordinate.
-cq.Workplane.polarLine(distance, angle[, ...])- Make a line of the given length, at the given angle from the current point
-cq.Workplane.polarLineTo(distance, angle[, ...])- Make a line from the current point to the given polar coordinates
 cq.Workplane.moveTo([x, y])- Move to the specified point, without drawing.
 cq.Workplane.move([xDist, yDist])- Move the specified distance from the current point, without drawing.
 cq.Workplane.spline(listOfXYTuple[, tangents, ...])- Create a spline interpolated through the provided points (2D or 3D).
@@ -33,12 +31,7 @@ cq.Workplane.ellipse(x_radius, y_radius[, ...])- Make an ellipse for each item o
 cq.Workplane.ellipseArc(x_radius, y_radius[, ...])- Draw an elliptical arc with x and y radiuses either with start point at current point or or current point being the center of the arc
 cq.Workplane.polyline(listOfXYTuple[, ...])- Create a polyline from a list of points
 cq.Workplane.close()- End construction, and attempt to build a closed wire.
-cq.Workplane.rarray(xSpacing, ySpacing, xCount, ...)- Creates an array of points and pushes them onto the stack.
-cq.Workplane.polarArray(radius, startAngle, ...)- Creates a polar array of points and pushes them onto the stack.
-cq.Workplane.slot2D(length, diameter[, angle])- Creates a rounded slot for each point on the stack.
-cq.Workplane.offset2D(d[, kind, forConstruction])- Creates a 2D offset wire.
-cq.Workplane.placeSketch(*sketches)- Place the provided sketch(es) based on the current items on the stack.
-obj = obj.faces(">Z").workplane().circle(diameter).cutThruAll() - tot make a hoole in the middle
+obj = obj.faces(">Z").workplane().circle(diameter).cutThruAll() - to make a hoole in the middle
 
 Here are also some gear classes from the library, use this as input to cq.Workplane.gear:
 cq_gears.BevelGear(module, teeth_number, cone_angle, face_width, pressure_angle=20.0, helix_angle=0.0, clearance=0.0, backlash=0.0, bore_d)
@@ -55,4 +48,10 @@ obj = cq.Workplane('XY').gear(spur_gear)
 
 to fillet:
 obj = obj.edges(edge).fillet(radius)
+
+Here is a way to generate airfoils:
+# Generate coordinates
+coords = parafoil.NACAAirfoil(naca_number, cord).get_coords()
+# Extrude in cadquery
+obj = cq.Workplane("YZ").polyline(listOfXYTuple=coords).close().extrude(length)
 """

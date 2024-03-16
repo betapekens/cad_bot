@@ -81,7 +81,7 @@ if ANYSCALE_ENDPOINT_TOKEN is not None:
                     'role': 'assistant',
                     'content': full_response
                 })
-        #st.session_state.messages.append({"role": "assistant", "content": full_response})
+        st.session_state.messages.append({"role": "assistant", "content": full_response})
         
         script_name = "llm_query.py"
         with open(script_name, "w") as f:
@@ -99,7 +99,7 @@ if ANYSCALE_ENDPOINT_TOKEN is not None:
             # Use re.sub() to replace all matches with an empty string
             code = regex.sub(pattern, '', code)
             f.write(
-                f'\nimport cadquery as cq\nimport cq_gears\n{code}\
+                f'\nimport cadquery as cq\nimport cq_gears\nimport parafoil\n{code}\
                     \ncq.exporters.export(obj, "stl_files/obj.stl")\
                     \ncq.exporters.export(obj, "stl_files/obj.step")'
             )
