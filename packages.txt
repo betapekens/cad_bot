@@ -4,3 +4,4 @@ libglu1-mesa
 libxcursor1
 libxext6
 lib32ncurses6
+libxft2
