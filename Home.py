@@ -57,7 +57,7 @@ for message in st.session_state.messages:
 client = anthropic.Client(api_key=ANYSCALE_ENDPOINT_TOKEN)
 if ANYSCALE_ENDPOINT_TOKEN is not None:
     if prompt := st.chat_input("Try to create a 20x10 inch faceplate!"):
-        with st.chat_message("user"):
+        with st.chat_message("user", avatar="🧑‍💻"):
             st.markdown(prompt)
         st.session_state.messages.append({"role": "user", "content": prompt})
         prompt = prompt #+ "Never import libraries, write everything from start in a codeblock"
@@ -148,7 +148,7 @@ if ANYSCALE_ENDPOINT_TOKEN is not None:
                                             y=3000,
                                             z=10000))
         
-        message_assistant = st.chat_message("assistant")
+        message_assistant = st.chat_message("assistant", avatar="🤖")
         message_assistant.plotly_chart(fig, use_container_width=True)
         end = time.time()
 
