@@ -5,3 +5,4 @@ libxcursor1
 libxext6
 lib32ncurses6
 libxft2
+libxinerama1
