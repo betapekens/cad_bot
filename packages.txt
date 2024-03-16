@@ -3,5 +3,4 @@ libxrender1
 libglu1-mesa
 libxcursor1
 libxext6
-libxext6:i386
 lib32ncurses6
