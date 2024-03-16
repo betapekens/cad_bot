@@ -81,7 +81,7 @@ if ANYSCALE_ENDPOINT_TOKEN is not None:
                     'role': 'assistant',
                     'content': full_response
                 })
-        st.session_state.messages.append({"role": "assistant", "content": full_response})
+        #st.session_state.messages.append({"role": "assistant", "content": full_response})
         
         script_name = "llm_query.py"
         with open(script_name, "w") as f:
