@@ -69,8 +69,8 @@ if ANYSCALE_ENDPOINT_TOKEN is not None:
                 start = time.time()
                 full_response = client.messages.create(
                     #model="claude-3-haiku-20240307",
-                    model="claude-3-sonnet-20240229",
-                    #model="claude-3-opus-20240229",
+                    #model="claude-3-sonnet-20240229",
+                    model="claude-3-opus-20240229",
                     system=pre_prompt, # <-- system prompt
                     messages=st.session_state['message_history'],
                     max_tokens = 1000
