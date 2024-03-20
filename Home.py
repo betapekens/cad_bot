@@ -62,7 +62,7 @@ if ANYSCALE_ENDPOINT_TOKEN is not None:
         with st.chat_message("assistant", avatar="🤖"):
             with st.spinner():
                 st.session_state.messages.append({"role": "user", "content": prompt})
-                prompt = prompt #+ "Never import libraries, write everything from start in a codeblock"
+                prompt = prompt + "Do not import any libraries"
                 
                 message_placeholder = st.empty()
                 st.session_state['message_history'].append({"role": "user", "content": prompt})
