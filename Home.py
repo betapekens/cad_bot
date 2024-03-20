@@ -112,8 +112,12 @@ if ANYSCALE_ENDPOINT_TOKEN is not None:
                 #import llm_query
                 subprocess.run([f"{sys.executable}", "llm_query.py"])
 
+                stl_file_path = "stl_files/obj.stl"
+                if os.path.exists(stl_file_path):
+                    my_mesh = mesh.Mesh.from_file('stl_files/obj.stl')
+                else:
+                    my_mesh = mesh.Mesh.from_file('stl_files/fail.stl')
 
-                my_mesh = mesh.Mesh.from_file('stl_files/obj.stl')
                 vertices, I, J, K = stl2mesh3d(my_mesh)
                 x, y, z = vertices.T
                 colorscale= [[0, '#e5dee5'], [1, '#e5dee5']]                           
@@ -155,7 +159,7 @@ if ANYSCALE_ENDPOINT_TOKEN is not None:
                 st.plotly_chart(fig, use_container_width=True)
         end = time.time()
 
-        stl_file_path = "stl_files/obj.stl"
+        
         # Check if the file exists
         st.write(f"Generated in **{round(end-start, 2)}** seconds")
         if os.path.exists(stl_file_path):
