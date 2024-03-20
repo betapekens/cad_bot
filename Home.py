@@ -19,7 +19,7 @@ hide_streamlit_style = """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
 ANYSCALE_ENDPOINT_TOKEN = st.secrets["ANYSCALE_ENDPOINT_TOKEN"]
 #ANYSCALE_ENDPOINT_TOKEN = st.sidebar.text_input("API KEY", "",type="password")
- if os.path.exists("stl_files/obj.stl"):
+if os.path.exists("stl_files/obj.stl"):
     subprocess.run([f"rm stl_files/obj.stl"])
 
 
