@@ -121,6 +121,7 @@ if ANYSCALE_ENDPOINT_TOKEN is not None:
                 if os.path.exists(stl_file_path):
                     my_mesh = mesh.Mesh.from_file('stl_files/obj.stl')
                 else:
+                    st.error(f'ERROR:{code}', icon="🚨")
                     my_mesh = mesh.Mesh.from_file('stl_files/fail.stl')
 
                 vertices, I, J, K = stl2mesh3d(my_mesh)
