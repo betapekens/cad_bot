@@ -78,6 +78,7 @@ if ANYSCALE_ENDPOINT_TOKEN is not None:
                     messages=st.session_state['message_history'],
                     max_tokens = 1000
                 ).content[0].text
+                print(full_response)
 
 
                     #message_placeholder.write(full_response)
@@ -103,8 +104,12 @@ if ANYSCALE_ENDPOINT_TOKEN is not None:
 
                     # Use re.sub() to replace all matches with an empty string
                     code = regex.sub(pattern, '', code)
+                    if "parafoil" in full_response:
+                        parafoil = "import parafoil"
+                    else:
+                        parafoil = ""
                     f.write(
-                        f'\nimport cadquery as cq\nimport cq_gears\nimport parafoil\n{code}\
+                        f'\nimport cadquery as cq\nimport cq_gears\n{parafoil}\n{code}\
                             \ncq.exporters.export(obj, "stl_files/obj.stl")\
                             \ncq.exporters.export(obj, "stl_files/obj.step")'
                     )
