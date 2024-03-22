@@ -16,22 +16,21 @@ cq.Workplane.hLineTo(xCoord[, forConstruction])- Make a horizontal line from the
 cq.Workplane.moveTo([x, y])- Move to the specified point, without drawing.
 cq.Workplane.move([xDist, yDist])- Move the specified distance from the current point, without drawing.
 cq.Workplane.spline(listOfXYTuple[, tangents, ...])- Create a spline interpolated through the provided points (2D or 3D).
-cq.Workplane.parametricCurve(func[, N, start, ...])- Create a spline curve approximating the provided function.
-cq.Workplane.parametricSurface(func[, N, ...])- Create a spline surface approximating the provided function.
-cq.Workplane.threePointArc(point1, point2[, ...])- Draw an arc from the current point, through point1, and ending at point2
-cq.Workplane.sagittaArc(endPoint, sag[, ...])- Draw an arc from the current point to endPoint with an arc defined by the sag (sagitta).
-cq.Workplane.radiusArc(endPoint, radius[, ...])- Draw an arc from the current point to endPoint with an arc defined by the radius.
-cq.Workplane.tangentArcPoint(endpoint[, ...])- Draw an arc as a tangent from the end of the current edge to endpoint.
 cq.Workplane.mirrorY()- Mirror entities around the y axis of the workplane plane.
 cq.Workplane.mirrorX()- Mirror entities around the x axis of the workplane plane.
 cq.Workplane.wire([forConstruction])- Returns a CQ object with all pending edges connected into a wire.
 cq.Workplane.rect(xLen, yLen[, centered, ...])- Make a rectangle for each item on the stack.
 cq.Workplane.circle(radius[, forConstruction])- Make a circle for each item on the stack.
 cq.Workplane.ellipse(x_radius, y_radius[, ...])- Make an ellipse for each item on the stack.
-cq.Workplane.ellipseArc(x_radius, y_radius[, ...])- Draw an elliptical arc with x and y radiuses either with start point at current point or or current point being the center of the arc
 cq.Workplane.polyline(listOfXYTuple[, ...])- Create a polyline from a list of points
 cq.Workplane.close()- End construction, and attempt to build a closed wire.
-obj = obj.faces(">Z").workplane().circle(diameter).cutThruAll() - to make a hoole in the middle
+obj.faces(face_selector).workplane().hole(hole_diameter) - to make a hole into a face
+obj = cq.Workplane("XY").polygon(num_sides, length).extrude(height) - to make a prismatic polygon
+obj = cq.Workplane("XY").circle(radius).extrude(height) - to make a cylinder
+obj = cq.Workplane("XY").sphere(radius) - to make a sphere
+obj = cq.Solid.makeCone(base, top, eight) - to make a cone or truncated cone
+obj = cq.Solid.makeTorus(outer_radii, inner_radii) - to make a torus
+obj.faces(face_selector).chamfer(length) - to chamfer a face
 
 Here are also some gear classes from the library, use this as input to cq.Workplane.gear:
 cq_gears.BevelGear(module, teeth_number, cone_angle, face_width, pressure_angle=20.0, helix_angle=0.0, clearance=0.0, backlash=0.0, bore_d)
@@ -42,7 +41,6 @@ cq_gears.Worm(module, lead_angle, n_threads, length, pressure_angle=20.0, cleara
 cq_gears.SpurGear(self, module, teeth_number, width, pressure_angle=20.0, helix_angle=0.0, clearance=0.0, backlash=0.0, bore_d)
 
 example of a gear:
-# Create a gear object with the SpurGear class
 spur_gear = cq_gears.SpurGear(module=1.0, teeth_number=19, width=5.0, bore_d=5.0)
 obj = cq.Workplane('XY').gear(spur_gear)
 
@@ -50,8 +48,6 @@ to fillet:
 obj = obj.edges(edge).fillet(radius)
 
 Here is a way to generate airfoils:
-# Generate coordinates
 coords = parafoil.NACAAirfoil(naca_number, cord).get_coords()
-# Extrude in cadquery
 obj = cq.Workplane("YZ").polyline(listOfXYTuple=coords).close().extrude(length)
 """
