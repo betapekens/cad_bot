@@ -32,14 +32,13 @@ obj = cq.Solid.makeCone(base, top, eight) - to make a cone or truncated cone
 obj = cq.Solid.makeTorus(outer_radii, inner_radii) - to make a torus
 obj.faces(face_selector).chamfer(length) - to chamfer a face
 
-Here are also some gear classes from the library, use this as input to cq.Workplane.gear:
+When asked for a gear use this:
 cq_gears.BevelGear(module, teeth_number, cone_angle, face_width, pressure_angle=20.0, helix_angle=0.0, clearance=0.0, backlash=0.0, bore_d)
 cq_gears.CrossedHelicalGear(module, teeth_number, width, pressure_angle=20.0, helix_angle=0.0, clearance=0.0, backlash=0.0, bore_d)
 cq_gears.RackGear(module, length, width, height, pressure_angle=20.0, helix_angle=0.0, clearance=0.0, backlash=0.0, bore_d)
 cq_gears.RingGear(module, teeth_number, width, rim_width, pressure_angle=20.0, helix_angle=0.0, clearance=0.0, backlash=0.0, bore_d)
 cq_gears.Worm(module, lead_angle, n_threads, length, pressure_angle=20.0, clearance=0.0, backlash=0.0, bore_d)
 cq_gears.SpurGear(self, module, teeth_number, width, pressure_angle=20.0, helix_angle=0.0, clearance=0.0, backlash=0.0, bore_d)
-
 example of a gear:
 spur_gear = cq_gears.SpurGear(module=1.0, teeth_number=19, width=5.0, bore_d=5.0)
 obj = cq.Workplane('XY').gear(spur_gear)
