@@ -78,7 +78,7 @@ if ANYSCALE_ENDPOINT_TOKEN is not None:
                     messages=st.session_state['message_history'],
                     max_tokens = 1000
                 ).content[0].text
-                print(full_response)
+                print("RESPONSE:", full_response)
 
 
                     #message_placeholder.write(full_response)
