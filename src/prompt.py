@@ -39,6 +39,10 @@ cq_gears.RackGear(module, length, width, height, pressure_angle=20.0, helix_angl
 cq_gears.RingGear(module, teeth_number, width, rim_width, pressure_angle=20.0, helix_angle=0.0, clearance=0.0, backlash=0.0, bore_d)
 cq_gears.Worm(module, lead_angle, n_threads, length, pressure_angle=20.0, clearance=0.0, backlash=0.0, bore_d)
 cq_gears.SpurGear(self, module, teeth_number, width, pressure_angle=20.0, helix_angle=0.0, clearance=0.0, backlash=0.0, bore_d)
+cq_gears.HerringboneGear(module, teeth_number, width, helix_angle, bore_d)
+cq_gears.HerringboneRingGear(module, teeth_number, width, rim_width, helix_angle)
+cq_gears.PlanetaryGearset(module, sun_teeth_number, planet_teeth_number, width, rim_width, n_planets, bore_d)
+cq_gears.BevelGearPair(module, gear_teeth, pinion_teeth, face_width, helix_angle, axis_angle, bore_d, pinion_build_args={'bore_d': diameter})
 example of a gear:
 spur_gear = cq_gears.SpurGear(module=1.0, teeth_number=19, width=5.0, bore_d=5.0)
 obj = cq.Workplane('XY').gear(spur_gear)
