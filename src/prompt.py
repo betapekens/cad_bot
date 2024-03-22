@@ -45,7 +45,7 @@ cq_gears.PlanetaryGearset(module, sun_teeth_number, planet_teeth_number, width, 
 cq_gears.BevelGearPair(module, gear_teeth, pinion_teeth, face_width, helix_angle, axis_angle, bore_d, pinion_build_args={'bore_d': diameter})
 example of a gear:
 spur_gear = cq_gears.SpurGear(module=1.0, teeth_number=19, width=5.0, bore_d=5.0)
-obj = cq.Workplane('XY').gear(spur_gear)
+obj = cq.Workplane('XY').gear(spur_gear) # always put it inside .gear()
 
 to fillet:
 obj = obj.edges(edge).fillet(radius)
