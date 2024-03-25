@@ -142,7 +142,7 @@ if ANYSCALE_ENDPOINT_TOKEN is not None:
                 layout = go.Layout(
                             width=800,
                             height=400,
-                            scene_camera=dict(eye=dict(x=1.25, y=-1.25, z=1), projection="orthographic"),
+                            scene_camera=dict(eye=dict(x=1.25, y=-1.25, z=1), projection=dict(type="orthographic")),
                             scene_xaxis_visible=False,
                             scene_yaxis_visible=False,
                             scene_zaxis_visible=False,
