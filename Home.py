@@ -152,6 +152,7 @@ if ANYSCALE_ENDPOINT_TOKEN is not None:
                 fig = go.Figure(data=[mesh3D],
                                 layout=layout
                                 )
+                fig.layout.scene.camera.projection.type = "orthographic"
                 fig.data[0].update(lighting=dict(ambient= 0.18,
                                                 diffuse= 1,
                                                 fresnel=  .1,
