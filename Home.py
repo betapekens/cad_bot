@@ -67,8 +67,8 @@ st.sidebar.markdown("""
 
 ### Sample Queries:
 
-- "A planetary gear with 3 planets."
-- "Generate an airfoil with naca number 2412, 10 inches in cord and 10 inches in length"
+- A planetary gear with 3 planets.
+- Generate an airfoil with naca number 2412, 10 inches in cord and 10 inches in length
 """)
 
 client = anthropic.Client(api_key=ANYSCALE_ENDPOINT_TOKEN)
