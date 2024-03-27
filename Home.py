@@ -56,22 +56,23 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"], avatar=avatar):
         st.markdown(message["content"])
 
+st.sidebar.markdown("""
+🚀 **Quick Tips for Cadbot Magic:**
+
+- **Details Matter**: More specifics = better. E.g., "A plate with 4 holes, 2cm apart."
+- **Simplicity Rocks**: We're best with single objects, not assemblies.
+- **Think Shapes**: Geometric is great. "A sphere" yes, "a tiger" no.
+- **Start Simple**: We're on primitive parts for now. Think basics.
+- **Iterate and Create**: Start with a shape, then evolve it. Be creative!
+
+### Sample Queries:
+
+- "A planetary gear with 3 planets."
+- "Generate an airfoil with naca number 2412, 10 inches in cord and 10 inches in length"
+""")
+
 client = anthropic.Client(api_key=ANYSCALE_ENDPOINT_TOKEN)
 if ANYSCALE_ENDPOINT_TOKEN is not None:
-    st.markdown("""
-            🚀 **Quick Tips for Cadbot Magic:**
-
-            - **Details Matter**: More specifics = better. E.g., "A plate with 4 holes, 2cm apart."
-            - **Simplicity Rocks**: We're best with single objects, not assemblies.
-            - **Think Shapes**: Geometric is great. "A sphere" yes, "a tiger" no.
-            - **Start Simple**: We're on primitive parts for now. Think basics.
-            - **Iterate and Create**: Start with a shape, then evolve it. Be creative!
-
-            ### Sample Queries:
-
-            - "A planetary gear with 3 planets."
-            - "A 10-inch thick airfoil with NACA number 2412."
-            """, unsafe_allow_html=True)
     if prompt := st.chat_input("For example try to create a helical gear or an airfoil specifying the NACA number"):
         with st.chat_message("user", avatar="🧑"):
             st.markdown(prompt)
